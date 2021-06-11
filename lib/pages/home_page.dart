@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:zebra_raya/data/test_zpl.dart';
+import 'package:zebra_raya/services/socket_server.dart';
 import 'package:zebrautility/ZebraPrinter.dart';
 import 'package:zebrautility/zebrautility.dart';
 
@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ZebraPrinter _zebraPrinter;
+  final server = new SockerServerService.withoutParameters();
 
   @override
   Widget build(BuildContext context) {
