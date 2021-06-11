@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:zebra_raya/data/test_zpl.dart';
+import 'package:zebrautility/ZebraPrinter.dart';
+import 'package:zebrautility/zebrautility.dart';
+
+class HomePage extends StatefulWidget {
+  static final routeName = 'home';
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late ZebraPrinter _zebraPrinter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Zebra app'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.all(15.0),
+            width: double.infinity,
+            child: MaterialButton(
+              onPressed: _buscarImpresoras,
+              child: Text('Buscar impresoras'),
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(15.0),
+            width: double.infinity,
+            child: MaterialButton(
+              onPressed: _print,
+              child: Text('print'),
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _buscarImpresoras() async {
+    _zebraPrinter = await Zebrautility.getPrinterInstance(
+        onPrinterFound: onPrinterFound,
+        onPrinterDiscoveryDone: onPrinterDiscoveryDone,
+        onChangePrinterStatus: onChangePrinterStatus,
+        onPermissionDenied: onPermissionDenied);
+
+    _zebraPrinter.discoveryPrinters();
+    _zebraPrinter.connectToPrinter("58:93:D8:31:04:C9");
+  }
+
+  dynamic onPrinterFound(name, ipAddress, t) {
+    print("PrinterFound :" + name + ipAddress);
+  }
+
+  dynamic onPrinterDiscoveryDone() {
+    print("Discovery Done");
+  }
+
+  dynamic onChangePrinterStatus(status, color) {
+    print("change printer status: " + status + color);
+  }
+
+  dynamic onPermissionDenied() {
+    print("Permission Deny.");
+  }
+
+  void _print() {
+    _zebraPrinter.print(testZPL);
+  }
+}
