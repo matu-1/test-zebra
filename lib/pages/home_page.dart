@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zebra_raya/data/test_zpl.dart';
 import 'package:zebra_raya/services/socket_server.dart';
-import 'package:zebrautility/ZebraPrinter.dart';
-import 'package:zebrautility/zebrautility.dart';
+
 
 class HomePage extends StatefulWidget {
   static final routeName = 'home';
@@ -12,9 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late ZebraPrinter _zebraPrinter;
+  //  late ZebraPrinter _zebraPrinter;
   final server = new SockerServerService.withoutParameters();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +25,8 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.all(15.0),
             width: double.infinity,
             child: MaterialButton(
-              onPressed: _buscarImpresoras,
-              child: Text('Buscar impresoras'),
+              onPressed: () => server.createSocketServer(),
+              child: Text('Iniciar Servidor Socket'),
               color: Theme.of(context).primaryColor,
               textColor: Colors.white,
             ),
@@ -37,8 +35,8 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.all(15.0),
             width: double.infinity,
             child: MaterialButton(
-              onPressed: _print,
-              child: Text('print'),
+              onPressed: () => server.deleteSocketServer(),
+              child: Text('Cerrar Servidor Socket'),
               color: Theme.of(context).primaryColor,
               textColor: Colors.white,
             ),
@@ -48,34 +46,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _buscarImpresoras() async {
-    _zebraPrinter = await Zebrautility.getPrinterInstance(
-        onPrinterFound: onPrinterFound,
-        onPrinterDiscoveryDone: onPrinterDiscoveryDone,
-        onChangePrinterStatus: onChangePrinterStatus,
-        onPermissionDenied: onPermissionDenied);
+  // void _buscarImpresoras() async {
+  //   _zebraPrinter = await Zebrautility.getPrinterInstance(
+  //       onPrinterFound: onPrinterFound,
+  //       onPrinterDiscoveryDone: onPrinterDiscoveryDone,
+  //       onChangePrinterStatus: onChangePrinterStatus,
+  //       onPermissionDenied: onPermissionDenied);
 
-    _zebraPrinter.discoveryPrinters();
-    _zebraPrinter.connectToPrinter("58:93:D8:31:04:C9");
-  }
+  //   _zebraPrinter.discoveryPrinters();
+  //   _zebraPrinter.connectToPrinter("58:93:D8:31:04:C9");
+  // }
 
-  dynamic onPrinterFound(name, ipAddress, t) {
-    print("PrinterFound :" + name + ipAddress);
-  }
+  // dynamic onPrinterFound(name, ipAddress, t) {
+  //   print("PrinterFound :" + name + ipAddress);
+  // }
 
-  dynamic onPrinterDiscoveryDone() {
-    print("Discovery Done");
-  }
+  // dynamic onPrinterDiscoveryDone() {
+  //   print("Discovery Done");
+  // }
 
-  dynamic onChangePrinterStatus(status, color) {
-    print("change printer status: " + status + color);
-  }
+  // dynamic onChangePrinterStatus(status, color) {
+  //   print("change printer status: " + status + color);
+  // }
 
-  dynamic onPermissionDenied() {
-    print("Permission Deny.");
-  }
+  // dynamic onPermissionDenied() {
+  //   print("Permission Deny.");
+  // }
 
-  void _print() {
-    _zebraPrinter.print(testZPL);
-  }
+  // void _print() {
+  //   _zebraPrinter.print(testZPL);
+  // }
 }

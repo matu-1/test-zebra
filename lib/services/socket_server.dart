@@ -1,23 +1,47 @@
+import 'dart:async';
 import 'package:socket_io/socket_io.dart';
+
 class SockerServerService {
   late String port;
-  SockerServerService({required this.port}){2
-    this._createSocketServer();
+  late Server io;
+  late bool isServerUp;
+
+  SockerServerService.withoutParameters() {
+    this.port = '50000';
+    this.isServerUp = false;
   }
-  SockerServerService.withoutParameters(){
-    this.port='50000';
-    this._createSocketServer();
-  }
-   void _createSocketServer() {
-    // Dart server
-    var io = new Server();
-    io.on('connection', (client) {
-      print('connection default namespace');
-      client.on('msg', (data) {
-        print('data from default => $data');
-        client.emit('fromServer', "ok");
+  void createSocketServer() {
+    print("creando el nuevo servidor socket");
+    if (this.isServerUp) return;
+    this.io = new Server();
+    this.io.on('connection', (socket) {
+      print('conectado con un cliente....');
+      socket.on('msg', (data) {
+        print('data from client =>');
+        print(data);
+        socket.emit('msg', "ok lo recibi dog");
+      });
+      socket.on("print", (data) {
+        print("datos de impresion: ");
+        print(data);
+        socket.emit("print", "print desdel el server");
       });
     });
-    io.listen(this.port);
+
+    print("escuchando ... en el puerto 50000");
+    this.io.listen(50000);
+    this.isServerUp = true;
+  }
+
+  void deleteSocketServer() {
+    if (!this.isServerUp) return;
+    print("eliminando el socket...");
+    this.io.close();
+    print("socket eliminado...");
+    this.isServerUp = false;
+  }
+
+  FutureOr caca() {
+    return null;
   }
 }
